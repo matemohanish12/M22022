@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "maxcount",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}

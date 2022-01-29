@@ -1,0 +1,34 @@
+https://docs.microsoft.com/en-us/azure/app-service/tutorial-dotnetcore-sqldb-app?pivots=platform-linux
+az group create --name M2AccResourceGroup1 --location "east us"
+
+az sql server create --name 2subjectjot --resource-group M2AccResourceGroup --location "east us" --admin-user m2admin  --admin-password "Logitech$#1324"
+
+az sql server firewall-rule create --resource-group M2AccResourceGroup1 --server "1subjectjot" --name AllowAzureIps --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
+
+az sql server firewall-rule create --name AllowLocalClient --server 1subjectjot --resource-group M2AccResourceGroup1 --start-ip-address=24.17.209.157 --end-ip-address=24.17.209.157
+
+az sql db create --resource-group M2AccResourceGroup1 --server 1subjectjot --name coreDB --service-objective S0
+
+az sql db show-connection-string --client ado.net --server 1subjectjot --name coreDB
+
+export ConnectionStrings__MyDbConnection="Server=tcp:1subjectjot.database.windows.net,1433;Database=coreDB;User ID=m2admin;Password="Intel@123";Encrypt=true;Connection Timeout=30;"
+
+Configure local git deployment
+az webapp deployment user set --user-name m2acc --password Intel@123
+
+az appservice plan create --name myAppServicePlan --resource-group M2AccResourceGroup1 --sku FREE --is-linux
+
+az webapp create --resource-group M2AccResourceGroup1 --plan myAppServicePlan --name VNETMigration --runtime 'DOTNET|5.0' --deployment-local-git
+
+
+https://m2acc@vnetmigration.scm.azurewebsites.net/VNETMigration.git
+
+az webapp config connection-string set --resource-group M2AccResourceGroup1 --name VNETMigration --settings MyDbConnection='Server=tcp:1subjectjot.database.windows.net,1433;Database=coreDB;User ID=m2admin;Password=Intel@123;Encrypt=true;Connection Timeout=30;' --connection-string-type SQLAzure
+
+
+az webapp config appsettings set --name VNETMigration --resource-group M2AccResourceGroup1 --settings DEPLOYMENT_BRANCH='main'
+
+git remote add azure https://m2acc@vnetmigration.scm.azurewebsites.net/VNETMigration.git
+
+
+https://docs.microsoft.com/en-us/azure/architecture/example-scenario/private-web-app/private-web-app
