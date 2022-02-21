@@ -1,0 +1,11 @@
+#Constants
+$env:VMResourceGroup         = "M2AZDurableFunction"
+$env:SubscriptionId          = "722ff779-f513-46b1-87c9-6a5a717ed1ea"
+$env:Resource                = "management.azure.com"
+$env:ClientID                = "d8e86c20-96f9-49a3-936e-1cbf83905e65"
+$env:KeyVault                = "M2Keyvaultw"
+$env:TENANTID                = "556fe100-3865-4044-9060-d2ad023716d4"
+$env:AutomationResourceGroup = "M2Resources-FLS"
+$env:AutomationAccount       = "M2Automation"
+$env:UpdateDeploymentName    = "M2UpdatsDeployment"
+$env:Workspaceid             = "21164929-0634-4f6d-a1c3-c6cc7c210022"

@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "Count",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}

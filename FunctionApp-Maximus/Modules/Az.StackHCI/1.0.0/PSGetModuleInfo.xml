@@ -1,0 +1,163 @@
+<Objs Version="1.1.0.1" xmlns="http://schemas.microsoft.com/powershell/2004/04">
+  <Obj RefId="0">
+    <TN RefId="0">
+      <T>Microsoft.PowerShell.Commands.PSRepositoryItemInfo</T>
+      <T>System.Management.Automation.PSCustomObject</T>
+      <T>System.Object</T>
+    </TN>
+    <MS>
+      <S N="Name">Az.StackHCI</S>
+      <S N="Version">1.0.0</S>
+      <S N="Type">Module</S>
+      <S N="Description">Microsoft Azure PowerShell: Azure Stack HCI registration cmdlets</S>
+      <S N="Author">Microsoft Corporation</S>
+      <S N="CompanyName">azure-sdk</S>
+      <S N="Copyright">Microsoft Corporation. All rights reserved.</S>
+      <DT N="PublishedDate">2021-12-07T05:38:16-08:00</DT>
+      <Nil N="InstalledDate" />
+      <Nil N="UpdatedDate" />
+      <URI N="LicenseUri">http://aka.ms/azps-license</URI>
+      <URI N="ProjectUri">https://aka.ms/hci-docs</URI>
+      <Nil N="IconUri" />
+      <Obj N="Tags" RefId="1">
+        <TN RefId="1">
+          <T>System.Object[]</T>
+          <T>System.Array</T>
+          <T>System.Object</T>
+        </TN>
+        <LST>
+          <S>Az.StackHCI</S>
+          <S>AzureStackHCI</S>
+          <S>StackHCI</S>
+          <S>PSModule</S>
+          <S>PSEdition_Core</S>
+          <S>PSEdition_Desktop</S>
+        </LST>
+      </Obj>
+      <Obj N="Includes" RefId="2">
+        <TN RefId="2">
+          <T>System.Collections.Hashtable</T>
+          <T>System.Object</T>
+        </TN>
+        <DCT>
+          <En>
+            <S N="Key">Workflow</S>
+            <Obj N="Value" RefId="3">
+              <TNRef RefId="1" />
+              <LST />
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">Cmdlet</S>
+            <Ref N="Value" RefId="3" />
+          </En>
+          <En>
+            <S N="Key">Command</S>
+            <Obj N="Value" RefId="4">
+              <TNRef RefId="1" />
+              <LST>
+                <S>Register-AzStackHCI</S>
+                <S>Unregister-AzStackHCI</S>
+                <S>Test-AzStackHCIConnection</S>
+                <S>Set-AzStackHCI</S>
+                <S>Enable-AzStackHCIAttestation</S>
+                <S>Disable-AzStackHCIAttestation</S>
+                <S>Add-AzStackHCIVMAttestation</S>
+                <S>Remove-AzStackHCIVMAttestation</S>
+                <S>Get-AzStackHCIVMAttestation</S>
+              </LST>
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">Function</S>
+            <Obj N="Value" RefId="5">
+              <TNRef RefId="1" />
+              <LST>
+                <S>Register-AzStackHCI</S>
+                <S>Unregister-AzStackHCI</S>
+                <S>Test-AzStackHCIConnection</S>
+                <S>Set-AzStackHCI</S>
+                <S>Enable-AzStackHCIAttestation</S>
+                <S>Disable-AzStackHCIAttestation</S>
+                <S>Add-AzStackHCIVMAttestation</S>
+                <S>Remove-AzStackHCIVMAttestation</S>
+                <S>Get-AzStackHCIVMAttestation</S>
+              </LST>
+            </Obj>
+          </En>
+          <En>
+            <S N="Key">DscResource</S>
+            <Ref N="Value" RefId="3" />
+          </En>
+          <En>
+            <S N="Key">RoleCapability</S>
+            <Ref N="Value" RefId="3" />
+          </En>
+        </DCT>
+      </Obj>
+      <Nil N="PowerShellGetFormatVersion" />
+      <S N="ReleaseNotes">* Promoted Az.StackHCI to GA</S>
+      <Obj N="Dependencies" RefId="6">
+        <TNRef RefId="1" />
+        <LST>
+          <Obj RefId="7">
+            <TN RefId="3">
+              <T>System.Collections.Specialized.OrderedDictionary</T>
+              <T>System.Object</T>
+            </TN>
+            <DCT>
+              <En>
+                <S N="Key">Name</S>
+                <S N="Value">Az.Accounts</S>
+              </En>
+              <En>
+                <S N="Key">MinimumVersion</S>
+                <S N="Value">2.7.0</S>
+              </En>
+              <En>
+                <S N="Key">CanonicalId</S>
+                <S N="Value">nuget:Az.Accounts/2.7.0</S>
+              </En>
+            </DCT>
+          </Obj>
+        </LST>
+      </Obj>
+      <S N="RepositorySourceLocation">https://www.powershellgallery.com/api/v2</S>
+      <S N="Repository">PSGallery</S>
+      <S N="PackageManagementProvider">NuGet</S>
+      <Obj N="AdditionalMetadata" RefId="8">
+        <TN RefId="4">
+          <T>System.Management.Automation.PSCustomObject</T>
+          <T>System.Object</T>
+        </TN>
+        <MS>
+          <S N="copyright">Microsoft Corporation. All rights reserved.</S>
+          <S N="description">Microsoft Azure PowerShell: Azure Stack HCI registration cmdlets</S>
+          <S N="requireLicenseAcceptance">True</S>
+          <S N="releaseNotes">* Promoted Az.StackHCI to GA</S>
+          <S N="isLatestVersion">True</S>
+          <S N="isAbsoluteLatestVersion">True</S>
+          <S N="versionDownloadCount">977712</S>
+          <S N="downloadCount">1030892</S>
+          <S N="packageSize">68767</S>
+          <S N="published">12/7/2021 5:38:16 AM -08:00</S>
+          <S N="created">12/7/2021 5:38:16 AM -08:00</S>
+          <S N="lastUpdated">2/6/2022 6:11:29 AM -08:00</S>
+          <S N="tags">Az.StackHCI AzureStackHCI StackHCI PSModule PSEdition_Core PSEdition_Desktop PSFunction_Register-AzStackHCI PSCommand_Register-AzStackHCI PSFunction_Unregister-AzStackHCI PSCommand_Unregister-AzStackHCI PSFunction_Test-AzStackHCIConnection PSCommand_Test-AzStackHCIConnection PSFunction_Set-AzStackHCI PSCommand_Set-AzStackHCI PSFunction_Enable-AzStackHCIAttestation PSCommand_Enable-AzStackHCIAttestation PSFunction_Disable-AzStackHCIAttestation PSCommand_Disable-AzStackHCIAttestation PSFunction_Add-AzStackHCIVMAttestation PSCommand_Add-AzStackHCIVMAttestation PSFunction_Remove-AzStackHCIVMAttestation PSCommand_Remove-AzStackHCIVMAttestation PSFunction_Get-AzStackHCIVMAttestation PSCommand_Get-AzStackHCIVMAttestation PSIncludes_Function</S>
+          <S N="developmentDependency">False</S>
+          <S N="updated">2022-02-06T06:11:29Z</S>
+          <S N="NormalizedVersion">1.0.0</S>
+          <S N="Authors">Microsoft Corporation</S>
+          <S N="IsPrerelease">false</S>
+          <S N="ItemType">Module</S>
+          <S N="FileList">Az.StackHCI.nuspec|Az.StackHCI.format.ps1xml|Az.StackHCI.psd1|Az.StackHCI.psm1|bin\Az.StackHCI.private.deps.json|exports\ProxyCmdletDefinitions.ps1|internal\Az.StackHCI.internal.psm1|internal\ProxyCmdletDefinitions.ps1</S>
+          <S N="GUID">7a80d748-b6f0-42d1-a08d-215c5a006769</S>
+          <S N="PowerShellVersion">5.1</S>
+          <S N="DotNetFrameworkVersion">4.7.2</S>
+          <S N="CompanyName">Microsoft Corporation</S>
+        </MS>
+      </Obj>
+      <S N="InstalledLocation">C:\Users\PSCloudAdmin\AppData\Local\AzureFunctions\FunctionApp-Maximus\ManagedDependencies\220206061053572.ri\Az.StackHCI\1.0.0</S>
+    </MS>
+  </Obj>
+</Objs>

@@ -1,0 +1,9 @@
+{
+  "bindings": [
+    {
+      "name": "InputObject",
+      "type": "activityTrigger",
+      "direction": "in"
+    }
+  ]
+}
