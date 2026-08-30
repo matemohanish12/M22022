@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react'
-import { useParams, Link as RouterLink } from 'react-router-dom'
+import { useParams, Link as RouterLink, useNavigate } from 'react-router-dom'
 import { getService } from '../api/services'
-import { Container, Typography, Paper, Grid, Button } from '@mui/material'
+import { Container, Typography, Paper, Grid, Button, Alert } from '@mui/material'
+import { useAuth } from '../AuthContext'
 
 export default function ServiceDetails() {
   const { id } = useParams()
   const [service, setService] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
+  const { user } = useAuth()
+  const navigate = useNavigate()
+
+  const canEdit = user?.role && ['BCM Administrator', 'Business Service Owner'].includes(user.role)
+  const canDelete = user?.role === 'BCM Administrator'
 
   useEffect(() => {
     if (!id) return
@@ -55,6 +61,41 @@ export default function ServiceDetails() {
             <Typography variant="subtitle2" sx={{ mt: 1 }}>RTO / RPO</Typography>
             <Typography>{service.rto ?? '-'} / {service.rpo ?? '-'}</Typography>
           </Grid>
+        </Grid>
+
+        {!canEdit && !canDelete && (
+          <Alert severity="info" sx={{ mt: 2 }}>
+            You have view-only access to this service.
+          </Alert>
+        )}
+
+        <Grid container spacing={1} sx={{ mt: 2 }}>
+          {canEdit && (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => navigate(`/services/${id}/edit`)}
+              >
+                Edit
+              </Button>
+            </Grid>
+          )}
+          {canDelete && (
+            <Grid item>
+              <Button
+                variant="contained"
+                color="error"
+                onClick={() => {
+                  if (window.confirm('Delete this service?')) {
+                    navigate('/services')
+                  }
+                }}
+              >
+                Delete
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Paper>
     </Container>

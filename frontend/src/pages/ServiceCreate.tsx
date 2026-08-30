@@ -34,7 +34,9 @@ export default function ServiceCreate() {
     setError(null)
     setSaving(true)
     try {
-      await createService(form)
+      // Ensure service_id exists — backend validation requires it
+      const payload = { ...form, service_id: (crypto as any).randomUUID ? (crypto as any).randomUUID() : Date.now().toString() }
+      await createService(payload as any)
       navigate('/services')
     } catch (err: any) {
       setError(err.message || 'Failed to create')
