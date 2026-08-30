@@ -1,0 +1,818 @@
+openapi: 3.0.3
+info:
+  title: Business Continuity Management & Resilience Platform API
+  version: 1.0.0
+  description: >-
+    API for BCM Resilience Platform. Authentication via Azure Entra ID (JWT Bearer).
+servers:
+  - url: https://api.bcmmgmt.example.com/v1
+    description: Production server
+  - url: http://localhost:3000/v1
+    description: Local development
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT issued by Azure Entra ID / AAD. Include as Authorization: Bearer <token>.
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    AppUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        external_id:
+          type: string
+        username:
+          type: string
+        email:
+          type: string
+        full_name:
+          type: string
+        enabled:
+          type: boolean
+        preferred_theme:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Role:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        display_name:
+          type: string
+        description:
+          type: string
+    BusinessUnit:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        code: { type: string }
+        name: { type: string }
+        description: { type: string }
+        parent_id: { type: string, format: uuid, nullable: true }
+    Department:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        business_unit_id: { type: string, format: uuid }
+        name: { type: string }
+        code: { type: string }
+        description: { type: string }
+        manager_id: { type: string, format: uuid }
+    Contact:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        display_name: { type: string }
+        role: { type: string }
+        department_id: { type: string, format: uuid }
+        phone: { type: string }
+        email: { type: string }
+    Vendor:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        primary_contact_id: { type: string, format: uuid }
+        sla_details: { type: object }
+    Service:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        service_id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        category: { type: string }
+        business_function: { type: string }
+        owner_id: { type: string, format: uuid }
+        department_id: { type: string, format: uuid }
+        criticality: { type: integer }
+        status: { type: string }
+        supporting_applications: { type: object }
+        supporting_infrastructure: { type: object }
+    Subservice:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        service_id: { type: string, format: uuid }
+        name: { type: string }
+        description: { type: string }
+        owner_id: { type: string, format: uuid }
+        recovery_priority: { type: integer }
+        rto: { type: string }
+        rpo: { type: string }
+    ServiceDependency:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        parent_service_id: { type: string, format: uuid }
+        dependent_service_id: { type: string, format: uuid }
+        dependency_type: { type: string }
+    BIAEntry:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        service_id: { type: string, format: uuid }
+        subservice_id: { type: string, format: uuid }
+        period_hours: { type: integer }
+        revenue_loss: { type: number }
+        penalties: { type: number }
+        recovery_cost: { type: number }
+    Risk:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        risk_id: { type: string }
+        title: { type: string }
+        category: { type: string }
+        description: { type: string }
+        likelihood: { type: string }
+        impact: { type: string }
+        inherent_rating: { type: integer }
+        residual_rating: { type: integer }
+        owner_id: { type: string, format: uuid }
+    RiskTreatment:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        risk_id: { type: string, format: uuid }
+        treatment_description: { type: string }
+        owner_id: { type: string, format: uuid }
+    ContinuityStrategy:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        service_id: { type: string, format: uuid }
+        name: { type: string }
+        strategy_type: { type: string }
+        cost: { type: number }
+        feasibility_score: { type: integer }
+    RecoveryPlan:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        plan_name: { type: string }
+        service_id: { type: string, format: uuid }
+        plan_owner_id: { type: string, format: uuid }
+        status: { type: string }
+    RecoveryActivity:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        recovery_plan_id: { type: string, format: uuid }
+        step_number: { type: integer }
+        description: { type: string }
+        owner_id: { type: string, format: uuid }
+        estimated_duration: { type: string }
+        completion_status: { type: boolean }
+    Team:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        team_type: { type: string }
+        department_id: { type: string, format: uuid }
+    TeamMember:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        team_id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        designation: { type: string }
+    Incident:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        incident_id: { type: string }
+        incident_type: { type: string }
+        severity: { type: string }
+        occurred_at: { type: string, format: date-time }
+        status: { type: string }
+    IncidentLog:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        incident_id: { type: string, format: uuid }
+        actor_id: { type: string, format: uuid }
+        note: { type: string }
+    Test:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        test_name: { type: string }
+        test_type: { type: string }
+        scheduled_at: { type: string, format: date-time }
+        status: { type: string }
+    TestCalendarEvent:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        test_id: { type: string, format: uuid }
+        start_at: { type: string, format: date-time }
+        end_at: { type: string, format: date-time }
+    Document:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        doc_key: { type: string }
+        title: { type: string }
+        doc_type: { type: string }
+        owner_id: { type: string, format: uuid }
+        current_version_id: { type: string, format: uuid }
+    DocumentVersion:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        document_id: { type: string, format: uuid }
+        version_number: { type: integer }
+        file_path: { type: string }
+    ComplianceFramework:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        code: { type: string }
+    ComplianceRequirement:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        framework_id: { type: string, format: uuid }
+        requirement_key: { type: string }
+        description: { type: string }
+    AuditFinding:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        finding_key: { type: string }
+        title: { type: string }
+        severity: { type: string }
+    Notification:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        recipient_id: { type: string, format: uuid }
+        subject: { type: string }
+        body: { type: string }
+    Export:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        requested_by: { type: string, format: uuid }
+        export_type: { type: string }
+        status: { type: string }
+    AuditLog:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        entity_type: { type: string }
+        entity_id: { type: string, format: uuid }
+        actor_id: { type: string, format: uuid }
+        action: { type: string }
+  responses:
+    NotFound:
+      description: Resource not found
+    ValidationError:
+      description: Validation error
+security:
+  - bearerAuth: []
+paths:
+  /users:
+    get:
+      summary: List users
+      tags: [Users]
+      parameters:
+        - in: query
+          name: q
+          schema:
+            type: string
+          description: Search query
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AppUser'
+    post:
+      summary: Create user
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppUser'
+      responses:
+        '201':
+          description: Created
+  /users/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    get:
+      summary: Get user by id
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AppUser'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Replace user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AppUser'
+      responses:
+        '200': { description: Updated }
+    patch:
+      summary: Update user fields
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete user
+      responses:
+        '204': { description: Deleted }
+
+  /roles:
+    get:
+      summary: List roles
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create role
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Role'
+      responses:
+        '201': { description: Created }
+  /business-units:
+    get:
+      summary: List business units
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create business unit
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BusinessUnit'
+      responses:
+        '201': { description: Created }
+  /departments:
+    get:
+      summary: List departments
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create department
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Department'
+      responses:
+        '201': { description: Created }
+  /contacts:
+    get:
+      summary: List contacts
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create contact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Contact'
+      responses:
+        '201': { description: Created }
+  /vendors:
+    get:
+      summary: List vendors
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create vendor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Vendor'
+      responses:
+        '201': { description: Created }
+  /services:
+    get:
+      summary: List services
+      responses:
+        '200':
+          description: OK
+    post:
+      summary: Create service
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Service'
+      responses:
+        '201': { description: Created }
+  /services/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    get:
+      summary: Get service
+      responses:
+        '200': { description: OK }
+    put:
+      summary: Replace service
+      responses:
+        '200': { description: Updated }
+    patch:
+      summary: Update service
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete service
+      responses:
+        '204': { description: Deleted }
+  /services/{id}/subservices:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    get:
+      summary: List subservices for service
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create subservice
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Subservice'
+      responses:
+        '201': { description: Created }
+
+  /subservices/{id}:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    get:
+      summary: Get subservice
+      responses:
+        '200': { description: OK }
+    put:
+      summary: Replace subservice
+      responses:
+        '200': { description: Updated }
+    delete:
+      summary: Delete subservice
+      responses:
+        '204': { description: Deleted }
+
+  /service-dependencies:
+    get:
+      summary: List service dependencies
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create service dependency
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceDependency'
+      responses:
+        '201': { description: Created }
+
+  /bia:
+    get:
+      summary: List BIA entries
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create BIA entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BIAEntry'
+      responses:
+        '201': { description: Created }
+
+  /risks:
+    get:
+      summary: List risks
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Risk'
+      responses:
+        '201': { description: Created }
+
+  /risks/{id}/treatments:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    get:
+      summary: List treatments for a risk
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create treatment for risk
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RiskTreatment'
+      responses:
+        '201': { description: Created }
+
+  /strategies:
+    get:
+      summary: List continuity strategies
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create continuity strategy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ContinuityStrategy'
+      responses:
+        '201': { description: Created }
+
+  /recovery-plans:
+    get:
+      summary: List recovery plans
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create recovery plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoveryPlan'
+      responses:
+        '201': { description: Created }
+  /recovery-plans/{id}/activities:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    post:
+      summary: Add activity to plan
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RecoveryActivity'
+      responses:
+        '201': { description: Created }
+
+  /teams:
+    get:
+      summary: List teams
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create team
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '201': { description: Created }
+
+  /teams/{id}/members:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    post:
+      summary: Add member
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeamMember'
+      responses:
+        '201': { description: Created }
+
+  /incidents:
+    get:
+      summary: List incidents
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create incident
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Incident'
+      responses:
+        '201': { description: Created }
+
+  /incidents/{id}/logs:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    post:
+      summary: Add log entry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IncidentLog'
+      responses:
+        '201': { description: Created }
+
+  /tests:
+    get:
+      summary: List tests
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create test
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Test'
+      responses:
+        '201': { description: Created }
+
+  /documents:
+    get:
+      summary: List documents
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create document
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Document'
+      responses:
+        '201': { description: Created }
+
+  /documents/{id}/versions:
+    parameters:
+      - $ref: '#/components/parameters/idParam'
+    post:
+      summary: Upload document version
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                metadata:
+                  type: string
+      responses:
+        '201': { description: Created }
+
+  /compliance/frameworks:
+    get:
+      summary: List compliance frameworks
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create framework
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComplianceFramework'
+      responses:
+        '201': { description: Created }
+
+  /audit/findings:
+    get:
+      summary: List audit findings
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create finding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuditFinding'
+      responses:
+        '201': { description: Created }
+
+  /notifications:
+    get:
+      summary: List notifications
+      responses:
+        '200': { description: OK }
+    post:
+      summary: Create notification
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+      responses:
+        '201': { description: Created }
+
+  /exports:
+    post:
+      summary: Request data export (PDF/Word/Excel)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Export'
+      responses:
+        '202': { description: Accepted }
+
+  /audit-log:
+    get:
+      summary: Query audit log
+      parameters:
+        - in: query
+          name: entity_type
+          schema: { type: string }
+      responses:
+        '200': { description: OK }
+
+tags:
+  - name: Users
+  - name: Services
+  - name: Documents
+  - name: Risks
+  - name: Tests
+  - name: Incidents
+
+
+# End of OpenAPI
