@@ -1,0 +1,159 @@
+%% Mermaid ER diagram for BCM Resilience Platform
+%% Use a Mermaid renderer that supports ER diagrams or convert to graphviz
+
+erDiagram
+  APP_USERS ||--o{ USER_ROLES : has
+  ROLES ||--o{ USER_ROLES : assigns
+  BUSINESS_UNITS ||--o{ DEPARTMENTS : contains
+  DEPARTMENTS ||--o{ SERVICES : owns
+  APP_USERS ||--o{ SERVICES : owns
+  SERVICES ||--o{ SUBSERVICES : contains
+  SERVICES ||--o{ SERVICE_DEPENDENCIES : parent_of
+  SERVICES ||--o{ RECOVERY_PLANS : covered_by
+  SUBSERVICES ||--o{ BIA_ENTRIES : assessed_by
+  SERVICES ||--o{ BIA_ENTRIES : assessed_by
+  RISK_REGISTER ||--o{ RISK_TREATMENTS : has
+  APP_USERS ||--o{ RISK_REGISTER : owns
+  CONTINUITY_STRATEGIES ||--o{ SERVICES : applies_to
+  RECOVERY_PLANS ||--o{ RECOVERY_ACTIVITIES : consists_of
+  TEAMS ||--o{ TEAM_MEMBERS : includes
+  APP_USERS ||--o{ TEAM_MEMBERS : member
+  INCIDENTS ||--o{ INCIDENT_LOGS : logs
+  TESTS ||--o{ TEST_CALENDAR_EVENTS : schedules
+  DOCUMENTS ||--o{ DOCUMENT_VERSIONS : versions
+  COMPLIANCE_FRAMEWORKS ||--o{ COMPLIANCE_REQUIREMENTS : contains
+  COMPLIANCE_REQUIREMENTS ||--o{ AUDIT_FINDINGS : maps_to
+  APP_USERS ||--o{ NOTIFICATIONS : receives
+  APP_USERS ||--o{ AUDIT_LOG : actor
+
+  APP_USERS {
+    UUID id PK
+    TEXT username
+    TEXT email
+  }
+  ROLES {
+    UUID id PK
+    TEXT name
+  }
+  BUSINESS_UNITS {
+    UUID id PK
+    TEXT name
+  }
+  DEPARTMENTS {
+    UUID id PK
+    TEXT name
+    UUID business_unit_id FK
+  }
+  SERVICES {
+    UUID id PK
+    TEXT service_id
+    TEXT name
+    UUID owner_id FK
+    INT criticality
+  }
+  SUBSERVICES {
+    UUID id PK
+    UUID service_id FK
+    TEXT name
+    INTERVAL rto
+    INTERVAL rpo
+  }
+  SERVICE_DEPENDENCIES {
+    UUID id PK
+    UUID parent_service_id FK
+    UUID dependent_service_id FK
+  }
+  BIA_ENTRIES {
+    UUID id PK
+    UUID service_id FK
+    INT period_hours
+    NUM revenue_loss
+  }
+  RISK_REGISTER {
+    UUID id PK
+    TEXT risk_id
+    TEXT title
+  }
+  RISK_TREATMENTS {
+    UUID id PK
+    UUID risk_id FK
+    TEXT treatment_description
+  }
+  CONTINUITY_STRATEGIES {
+    UUID id PK
+    UUID service_id FK
+    TEXT strategy_type
+  }
+  RECOVERY_PLANS {
+    UUID id PK
+    TEXT plan_name
+    UUID service_id FK
+  }
+  RECOVERY_ACTIVITIES {
+    UUID id PK
+    UUID recovery_plan_id FK
+    INT step_number
+  }
+  TEAMS {
+    UUID id PK
+    TEXT name
+  }
+  TEAM_MEMBERS {
+    UUID id PK
+    UUID team_id FK
+    UUID user_id FK
+  }
+  INCIDENTS {
+    UUID id PK
+    TEXT incident_id
+    TEXT status
+  }
+  INCIDENT_LOGS {
+    UUID id PK
+    UUID incident_id FK
+    UUID actor_id FK
+  }
+  TESTS {
+    UUID id PK
+    TEXT test_name
+    TEXT status
+  }
+  TEST_CALENDAR_EVENTS {
+    UUID id PK
+    UUID test_id FK
+  }
+  DOCUMENTS {
+    UUID id PK
+    TEXT doc_key
+    TEXT title
+  }
+  DOCUMENT_VERSIONS {
+    UUID id PK
+    UUID document_id FK
+    INT version_number
+  }
+  COMPLIANCE_FRAMEWORKS {
+    UUID id PK
+    TEXT name
+  }
+  COMPLIANCE_REQUIREMENTS {
+    UUID id PK
+    UUID framework_id FK
+  }
+  AUDIT_FINDINGS {
+    UUID id PK
+    UUID requirement_id FK
+    TEXT severity
+  }
+  NOTIFICATIONS {
+    UUID id PK
+    UUID recipient_id FK
+    TEXT subject
+  }
+  AUDIT_LOG {
+    UUID id PK
+    TEXT entity_type
+    UUID entity_id
+  }
+
+%% End of ER diagram
